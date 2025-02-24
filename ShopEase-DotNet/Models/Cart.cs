@@ -1,15 +1,21 @@
-﻿namespace ShopEase.Models
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace ShopEase.Models
 {
     public class Cart
     {
-        public int CartId { get; set; }
-        public int UserId { get; set; }
-        public int ProductId { get; set; }
-        public int Quantity { get; set; }
+        [Key]
+        public int Id { get; set; }
 
-        public decimal TotalCost { get; set; } // Computed in EF Core
+        [Required]
+        public string UserId { get; set; }
 
-        //public User User { get; set; }
-        public Product Product { get; set; }
+        [ForeignKey("UserId")]
+        public virtual ApplicationUser User { get; set; }  // ✅ Establish relationship with User
+
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        public virtual ICollection<CartItem> CartItems { get; set; } = new List<CartItem>();
     }
 }

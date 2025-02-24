@@ -17,12 +17,35 @@ namespace ShopEase.Data
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<Cart> Carts { get; set; }
+        public DbSet<CartItem> CartItems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
-            // Role-Permissions many-to-many relationship
+            // ✅ Define Cart-User relationship (1 User → 1 Cart)
+            builder.Entity<Cart>()
+                .HasOne(c => c.User)
+                .WithOne(u => u.Cart)  // 🔄 Establish bidirectional relationship
+                .HasForeignKey<Cart>(c => c.UserId)
+                .OnDelete(DeleteBehavior.Cascade);  // 🛑 If user is deleted, cart will be deleted too
+
+            // ✅ Define CartItem-Cart relationship (1 Cart → Many Items)
+            builder.Entity<CartItem>()
+                .HasOne(ci => ci.Cart)
+                .WithMany(c => c.CartItems)
+                .HasForeignKey(ci => ci.CartId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // ✅ Define CartItem-Product relationship (1 Product → Many CartItems)
+            builder.Entity<CartItem>()
+                .HasOne(ci => ci.Product)
+                .WithMany()
+                .HasForeignKey(ci => ci.ProductId)
+                .OnDelete(DeleteBehavior.Restrict); // 🛑 Prevent deletion of product if in cart
+
+            // ✅ Role-Permissions many-to-many relationship
             builder.Entity<RolePermission>()
                 .HasKey(rp => new { rp.RoleId, rp.PermissionId });
 
@@ -36,24 +59,19 @@ namespace ShopEase.Data
                 .WithMany(p => p.RolePermissions)
                 .HasForeignKey(rp => rp.PermissionId);
 
-            // User-Roles many-to-many relationship (default Identity behavior)
-            builder.Entity<IdentityUserRole<string>>()
-                .HasKey(ur => new { ur.UserId, ur.RoleId });
-
-            // Category and SubCategory (one-to-many relationship)
+            // ✅ Category and SubCategory (one-to-many relationship)
             builder.Entity<Category>()
                 .HasOne(c => c.ParentCategory)
                 .WithMany(c => c.SubCategories)
                 .HasForeignKey(c => c.ParentCategoryId)
-                .OnDelete(DeleteBehavior.Restrict); // Prevent cascading delete for parent-child relation
+                .OnDelete(DeleteBehavior.Restrict);
 
-            // Product-Category (many-to-one relationship)
+            // ✅ Product-Category (many-to-one relationship)
             builder.Entity<Product>()
                 .HasOne(p => p.Category)
                 .WithMany(c => c.Products)
                 .HasForeignKey(p => p.CategoryId)
-                .OnDelete(DeleteBehavior.Restrict); // Prevent deletion of category if product exists
-
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

@@ -19,16 +19,54 @@ namespace ShopEase.Services
             _mapper = mapper;
         }
 
-        // Get all products
-        public async Task<IEnumerable<ProductResponse>> GetAllProductsAsync()
+        public async Task<PaginatedResponse<ProductResponse>> GetAllProductsAsync(
+            int pageNumber, int pageSize, string sortBy, bool descending, string searchTerm, int? categoryId)
         {
-            var products = await _unitOfWork.Product.GetQueryable()
-                .Include(p => p.Category) 
-                    .ThenInclude(c => c.SubCategories) 
-                .ToListAsync();
+            var query = _unitOfWork.Product.GetQueryable()
+                .Include(p => p.Category)
+                    .ThenInclude(c => c.SubCategories)
+                .AsQueryable();
 
-            return _mapper.Map<IEnumerable<ProductResponse>>(products);
+            // Searching
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                query = query.Where(p => p.Name.Contains(searchTerm) || p.Description.Contains(searchTerm));
+            }
+
+            // Filtering by Category
+            if (categoryId.HasValue)
+            {
+                query = query.Where(p => p.CategoryId == categoryId.Value);
+            }
+
+            // Sorting
+            if (!string.IsNullOrEmpty(sortBy))
+            {
+                query = sortBy.ToLower() switch
+                {
+                    "name" => descending ? query.OrderByDescending(p => p.Name) : query.OrderBy(p => p.Name),
+                    "price" => descending ? query.OrderByDescending(p => p.Price) : query.OrderBy(p => p.Price),
+                    "createdat" => descending ? query.OrderByDescending(p => p.CreatedAt) : query.OrderBy(p => p.CreatedAt),
+                    _ => query.OrderBy(p => p.Id)
+                };
+            }
+
+            // Pagination
+            int totalRecords = await query.CountAsync();
+            var products = await query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            var mappedProducts = _mapper.Map<List<ProductResponse>>(products);
+
+            return new PaginatedResponse<ProductResponse>
+            {
+                Data = mappedProducts,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalRecords = totalRecords,
+                TotalPages = (int)Math.Ceiling(totalRecords / (double)pageSize)
+            };
         }
+
 
         // Get a product by Id
         public async Task<ProductResponse> GetProductByIdAsync(int id)

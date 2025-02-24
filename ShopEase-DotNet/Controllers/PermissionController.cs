@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ShopEase.DTOs.Request;
 using ShopEase.DTOs.Response;
+using Microsoft.AspNetCore.Authorization;
 using ShopEase.Services.IServices;
 using ShopEase.Models;
 
@@ -9,7 +10,7 @@ namespace ShopEase.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     public class PermissionController : ControllerBase
     {
         private readonly IPermissionService _permissionService;

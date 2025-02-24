@@ -15,8 +15,14 @@ namespace ShopEase.Models
         [StringLength(500)]
         public string Description { get; set; }
 
-        [Required]
+        [Column(TypeName = "decimal(18,2)")]
         public decimal Price { get; set; }
+
+        [Column(TypeName = "decimal(5,2)")]
+        public decimal DiscountPercentage { get; set; }
+
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal DiscountedPrice { get; set; }
 
         public int StockQuantity { get; set; }  
         public bool IsAvailable { get; set; }   
@@ -32,9 +38,6 @@ namespace ShopEase.Models
         public string ImageUrl { get; set; }
 
         public double? Rating { get; set; }  
-
-        public decimal DiscountPercentage { get; set; }
-        public decimal DiscountedPrice { get; set; }   
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public DateTime? UpdatedAt { get; set; }

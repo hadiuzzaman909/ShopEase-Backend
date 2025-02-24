@@ -13,7 +13,7 @@ namespace ShopEase.Repositories
         public ICategoryRepository Category { get; private set; }
         public IProductRepository Product { get; private set; }
 
-
+        public ICartRepository Cart { get; private set; }
 
         public UnitOfWork(ApplicationDbContext db)
         {
@@ -23,6 +23,7 @@ namespace ShopEase.Repositories
             Permissions = new PermissionRepository(_db);
             Category = new CategoryRepository(_db);
             Product = new ProductRepository(_db);
+            Cart= new CartRepository(_db);
         }
 
         public async Task SaveAsync()

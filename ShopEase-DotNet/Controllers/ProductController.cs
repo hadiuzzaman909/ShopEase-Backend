@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using ShopEase.DTOs.Request;
 using ShopEase.DTOs.Response;
 using ShopEase.Services.IServices;
@@ -16,15 +17,20 @@ namespace ShopEase.Controllers
             _productService = productService;
         }
 
-        // ✅ Get all products
         [HttpGet]
-        public async Task<IActionResult> GetAllProducts()
+        public async Task<IActionResult> GetAllProducts(
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 10,
+            [FromQuery] string? sortBy = null,
+            [FromQuery] bool ascending = true,
+            [FromQuery] string? searchTerm = null,
+            [FromQuery] int? categoryId = null)
         {
-            var products = await _productService.GetAllProductsAsync();
+            var products = await _productService.GetAllProductsAsync(page, pageSize, sortBy, ascending, searchTerm, categoryId);
             return Ok(products);
         }
 
-        // ✅ Get product by Id
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetProductById(int id)
         {
@@ -39,8 +45,8 @@ namespace ShopEase.Controllers
             }
         }
 
-        // ✅ Create a new product
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateProduct([FromBody] ProductRequest productRequest)
         {
             try
@@ -54,7 +60,6 @@ namespace ShopEase.Controllers
             }
         }
 
-        // ✅ Create multiple products (Bulk Insertion)
         [HttpPost("bulk")]
         public async Task<IActionResult> CreateMultipleProducts([FromBody] List<ProductRequest> productRequests)
         {
@@ -74,7 +79,6 @@ namespace ShopEase.Controllers
             }
         }
 
-        // ✅ Update an existing product
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateProduct(int id, [FromBody] ProductRequest productRequest)
         {
@@ -89,7 +93,7 @@ namespace ShopEase.Controllers
             }
         }
 
-        // ✅ Delete a product
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProduct(int id)
         {

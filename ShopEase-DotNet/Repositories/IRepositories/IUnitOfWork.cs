@@ -6,6 +6,7 @@
         ICategoryRepository Category { get; }
         IProductRepository Product { get; }
         IPermissionRepository Permissions { get; }
+        ICartRepository Cart { get; }
         Task SaveAsync();
     }
 }

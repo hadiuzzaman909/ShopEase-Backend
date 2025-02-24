@@ -10,7 +10,10 @@ namespace ShopEase.Models
         public string Profession { get; set; }
         public bool IsVerified { get; set; } = false;
 
+        // ✅ Establish 1-to-1 relationship with Cart (Each user has ONE cart)
+        public virtual Cart Cart { get; set; }
+
         // ✅ Define relationship: A User can have multiple roles
-        public ICollection<IdentityUserRole<string>> UserRoles { get; set; } = new List<IdentityUserRole<string>>();
+        public virtual ICollection<IdentityUserRole<string>> UserRoles { get; set; } = new List<IdentityUserRole<string>>();
     }
 }
