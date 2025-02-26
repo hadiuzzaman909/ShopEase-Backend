@@ -1,8 +1,7 @@
 ﻿namespace ShopEase.DTOs.Request
 {
-    public class CartItemRequest
+    public class CartItemUpdateRequest
     {
-        public int? ProductId { get; set; }
         public int Quantity { get; set; }
     }
 }

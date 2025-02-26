@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using ShopEase.DTOs.Request;
 using ShopEase.Services.IServices;
 using System.Security.Claims;
@@ -40,15 +39,19 @@ namespace ShopEase.Controllers
         }
 
         // Update Item Quantity in Cart
-        [HttpPut("update/{cartItemId}")]
-        public async Task<IActionResult> UpdateCartItem(int cartItemId, [FromBody] int quantity)
+        [HttpPut("{cartItemId}")]
+        public async Task<IActionResult> UpdateCartItem(int cartItemId, [FromBody] CartItemUpdateRequest request)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (string.IsNullOrEmpty(userId)) return Unauthorized("User not found");
+            if (request.Quantity <= 0)
+                return BadRequest("Quantity must be greater than zero.");
 
-            var updatedCart = await _cartService.UpdateCartItemAsync(userId, cartItemId, quantity);
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId)) return Unauthorized();
+
+            var updatedCart = await _cartService.UpdateCartItemAsync(userId, cartItemId, request);
             return Ok(updatedCart);
         }
+
 
         // Remove Item from Cart
         [HttpDelete("remove/{cartItemId}")]

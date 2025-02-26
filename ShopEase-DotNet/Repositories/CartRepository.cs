@@ -18,7 +18,7 @@ namespace ShopEase.Repositories
         {
             return await _db.Carts
                 .Include(c => c.CartItems)
-                .ThenInclude(ci => ci.Product)
+                .ThenInclude(ci => ci.Product) // Ensure Product details are included
                 .FirstOrDefaultAsync(c => c.UserId == userId);
         }
     }

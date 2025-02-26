@@ -1,14 +1,35 @@
-﻿namespace ShopEase.Models
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace ShopEase.Models
 {
     public class Order
     {
-        public int OrderId { get; set; }
-        public int UserId { get; set; }
-        public DateTime OrderDate { get; set; } = DateTime.UtcNow;
-        public decimal TotalPrice { get; set; }
-        public string Status { get; set; } // "Pending", "Shipped", "Delivered", "Cancelled"
+        [Key]
+        public int Id { get; set; }
 
-        //public User User { get; set; }
-        public ICollection<OrderItem> OrderItems { get; set; }
+        [Required]
+        public string UserId { get; set; }
+
+        [ForeignKey("UserId")]
+        public ApplicationUser User { get; set; }
+
+        [Required]
+        public DateTime OrderDate { get; set; } = DateTime.UtcNow;
+
+        [Required]
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal TotalAmount => OrderItems.Sum(oi => oi.TotalPrice); 
+
+        [Required]
+        public OrderStatus Status { get; set; } = OrderStatus.Pending; // Default status
+
+        [Required]
+        public string ShippingAddress { get; set; }
+        [Required]
+        public string PaymentMethod { get; set; } 
+
+        public ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
     }
+
 }
