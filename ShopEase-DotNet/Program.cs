@@ -40,7 +40,9 @@ builder.Services.AddScoped<IOrderService, OrderService>(); // Register Order Ser
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
+    options.AddPolicy("VendorOnly", policy => policy.RequireRole("Vendor"));
     options.AddPolicy("UserOnly", policy => policy.RequireRole("User"));
+
 });
 
 // Add Controllers

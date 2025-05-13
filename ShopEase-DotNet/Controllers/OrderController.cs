@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ShopEase.DTOs.Request;
+using ShopEase.DTOs.Response;
 using ShopEase.Models;
 using System.Security.Claims;
 
@@ -15,6 +16,15 @@ namespace ShopEase.Controllers
         public OrderController(IOrderService orderService)
         {
             _orderService = orderService;
+        }
+
+        [HttpGet]
+        [Route("all-orders")]
+        [Authorize(Roles = "Admin")] 
+        public async Task<ActionResult<IEnumerable<OrderResponse>>> GetAllOrders()
+        {
+            var orders = await _orderService.GetAllOrdersAsync();
+            return Ok(orders);
         }
 
         // Place an order (Requires authentication)
@@ -49,22 +59,20 @@ namespace ShopEase.Controllers
         }
 
         // Update order status (Admin Only)
-    [HttpPut("{orderId}/status")]
-[Authorize(Roles = "Admin")]
-public async Task<IActionResult> UpdateOrderStatus(int orderId, [FromBody] OrderStatusUpdateRequest request)
-{
-    if (request == null)
-        return BadRequest("Request body is missing.");
+        [HttpPut("{orderId}/status")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> UpdateOrderStatus(int orderId, [FromBody] OrderStatusUpdateRequest request)
+        {
+        if (request == null)
+            return BadRequest("Request body is missing.");
 
-    if (!Enum.IsDefined(typeof(OrderStatus), request.Status))
-        return BadRequest("Invalid order status.");
+        if (!Enum.IsDefined(typeof(OrderStatus), request.Status))
+            return BadRequest("Invalid order status.");
 
-    var result = await _orderService.UpdateOrderStatusAsync(orderId, request.Status);
-    if (!result) return NotFound("Order not found.");
+        var result = await _orderService.UpdateOrderStatusAsync(orderId, request.Status);
+        if (!result) return NotFound("Order not found.");
 
-    return Ok(new { Message = "Order status updated successfully." });
-}
-
-
+        return Ok(new { Message = "Order status updated successfully." });
+        }
     }
 }

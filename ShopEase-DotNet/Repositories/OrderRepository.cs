@@ -1,6 +1,7 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
 using ShopEase.Data;
+using ShopEase.DTOs.Response;
 using ShopEase.Models;
 using ShopEase.Repositories.IRepositories;
 
@@ -13,6 +14,14 @@ namespace ShopEase.Repositories
         public OrderRepository(ApplicationDbContext db) : base(db)
         {
             _db = db;
+        }
+
+        public async Task<IEnumerable<Order>> GetAllOrdersAsync()
+        {
+            return await _db.Orders
+                .Include(o => o.OrderItems)
+                .ThenInclude(oi => oi.Product)
+                .ToListAsync();
         }
 
         // Get order by ID (including order items and product details)

@@ -5,7 +5,7 @@ namespace ShopEase.Models
 {
     public class RolePermission
     {
-        // ✅ Composite Key
+        // Composite Key
         [Required]
         public string RoleId { get; set; }
         [ForeignKey("RoleId")]

@@ -17,6 +17,12 @@ namespace ShopEase.Services
             _mapper = mapper;
         }
 
+        public async Task<IEnumerable<OrderResponse>> GetAllOrdersAsync()
+        {
+            var orders = await _unitOfWork.Order.GetAllAsync();
+            return _mapper.Map<IEnumerable<OrderResponse>>(orders);
+        }
+
         // Place a new order
         public async Task<OrderResponse> PlaceOrderAsync(string userId, OrderRequest request)
         {

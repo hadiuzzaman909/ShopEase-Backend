@@ -12,10 +12,10 @@ public static class SeedDataExtension
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
         var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-        // ✅ Ensure the database is migrated
+        // Ensure the database is migrated
         await dbContext.Database.MigrateAsync();
 
-        // ✅ Step 1: Seed Roles
+        // Step 1: Seed Roles
         var roles = new List<string> { "Admin", "Vendor", "Customer" };
         foreach (var role in roles)
         {
@@ -26,7 +26,7 @@ public static class SeedDataExtension
             }
         }
 
-        // ✅ Step 2: Seed Permissions
+        // Step 2: Seed Permissions
         var existingPermissions = await dbContext.Permissions.Select(p => p.Name).ToListAsync();
         var allPermissions = new List<string>
         {
@@ -48,7 +48,7 @@ public static class SeedDataExtension
         }
         await dbContext.SaveChangesAsync();
 
-        // ✅ Step 3: Assign Permissions to Roles
+        // Step 3: Assign Permissions to Roles
         var rolePermissionsMapping = new Dictionary<string, List<string>>
         {
             { "Admin", new List<string> { "ViewCategory", "ManageCategory", "ViewProducts", "ManageProducts" } },
@@ -82,7 +82,7 @@ public static class SeedDataExtension
         }
         await dbContext.SaveChangesAsync();
 
-        // ✅ Step 4: Seed Default Admin User
+        // Step 4: Seed Default Admin User
         string adminEmail = "admin@shopease.com";
         string adminPassword = "Admin@123";
 

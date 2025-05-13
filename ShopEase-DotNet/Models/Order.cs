@@ -22,7 +22,7 @@ namespace ShopEase.Models
         public decimal TotalAmount => OrderItems.Sum(oi => oi.TotalPrice); 
 
         [Required]
-        public OrderStatus Status { get; set; } = OrderStatus.Pending; // Default status
+        public OrderStatus Status { get; set; }
 
         [Required]
         public string ShippingAddress { get; set; }
