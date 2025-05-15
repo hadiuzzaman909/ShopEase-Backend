@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using ShopEase.Data;
-using ShopEase.Models;
+using Vellora.ECommerce.API.Data;
+using Vellora.ECommerce.API.Models;
 
 
-namespace ShopEase.Extensions
+namespace Vellora.ECommerce.API.Extensions
 {
     public static class IdentityExtension
     {

@@ -2,10 +2,10 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
-using ShopEase.Models;
-using ShopEase.Services.IServices;
+using Vellora.ECommerce.API.Models;
+using Vellora.ECommerce.API.Services.IServices;
 
-namespace ShopEase.Attributes
+namespace Vellora.ECommerce.API.Attributes
 {
     public class PermissionAttribute : AuthorizeAttribute
     {
@@ -26,6 +26,5 @@ namespace ShopEase.Attributes
                 context.Result = new ForbidResult();
             }
         }
-
     }
 }

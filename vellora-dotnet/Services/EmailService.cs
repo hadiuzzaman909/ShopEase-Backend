@@ -1,8 +1,8 @@
-﻿using ShopEase.Services.IServices;
+﻿using Vellora.ECommerce.API.Services.IServices;
 using System.Net.Mail;
 using System.Net;
 
-namespace ShopEase.Services
+namespace Vellora.ECommerce.API.Services
 {
     public class EmailService : IEmailService
     {

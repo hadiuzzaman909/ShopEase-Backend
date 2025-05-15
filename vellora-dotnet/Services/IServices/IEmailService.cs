@@ -1,4 +1,4 @@
-﻿namespace ShopEase.Services.IServices
+﻿namespace Vellora.ECommerce.API.Services.IServices
 {
     public interface IEmailService
     {

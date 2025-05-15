@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ShopEase.Data;
-using ShopEase.Repositories.IRepositories;
+using Vellora.ECommerce.API.Data;
+using Vellora.ECommerce.API.Repositories.IRepositories;
 using System.Linq.Expressions;
 
-namespace ShopEase.Repositories
+namespace Vellora.ECommerce.API.Repositories
 {
     public class Repository<T> : IRepository<T> where T : class
     {

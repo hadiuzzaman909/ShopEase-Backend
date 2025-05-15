@@ -1,18 +1,22 @@
-﻿using Microsoft.EntityFrameworkCore;
-using ShopEase.Data;
-using ShopEase.Extensions;
-using ShopEase.Services.IServices;
-using ShopEase.Services;
-using ShopEase.Utils;
-using ShopEase.Repositories.IRepositories;
-using ShopEase.Repositories;
-using ShopEase.Profiles;
+using Microsoft.EntityFrameworkCore;
+using Vellora.ECommerce.API.Data;
+using Vellora.ECommerce.API.Extensions;
+using Vellora.ECommerce.API.Services.IServices;
+using Vellora.ECommerce.API.Services;
+using Vellora.ECommerce.API.Utils;
+using Vellora.ECommerce.API.Repositories.IRepositories;
+using Vellora.ECommerce.API.Repositories;
+using Vellora.ECommerce.API.Profiles;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Register DbContext
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+// builder.Services.AddDbContext<ApplicationDbContext>(options =>
+//     options.UseNpgsql(connectionString));    
 
 // Register Identity Using Extension
 builder.Services.ConfigureIdentity(builder.Configuration);

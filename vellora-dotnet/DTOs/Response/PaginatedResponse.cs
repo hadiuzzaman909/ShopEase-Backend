@@ -1,4 +1,4 @@
-namespace ShopEase.DTOs.Response
+namespace Vellora.ECommerce.API.DTOs.Response
 {
 	public class PaginatedResponse<T>
 	{

@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ShopEase.Models
+namespace Vellora.ECommerce.API.Models
 {
     public class CartItem
     {

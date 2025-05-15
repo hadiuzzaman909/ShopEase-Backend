@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ShopEase.Data;
-using ShopEase.Models;
-using ShopEase.Repositories.IRepositories;
+using Vellora.ECommerce.API.Data;
+using Vellora.ECommerce.API.Models;
+using Vellora.ECommerce.API.Repositories.IRepositories;
 
-namespace ShopEase.Repositories
+namespace Vellora.ECommerce.API.Repositories
 {
     public class CartRepository : Repository<Cart>, ICartRepository
     {

@@ -1,10 +1,10 @@
 ﻿using Microsoft.IdentityModel.Tokens;
-using ShopEase.Models;
+using Vellora.ECommerce.API.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace ShopEase.Utils
+namespace Vellora.ECommerce.API.Utils
 {
     public class JwtUtils
     {

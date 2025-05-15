@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ShopEase.Models
+namespace Vellora.ECommerce.API.Models
 {
     public class Permission
     {

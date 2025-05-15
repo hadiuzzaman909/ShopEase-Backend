@@ -1,6 +1,6 @@
-﻿using ShopEase.Models;
+﻿using Vellora.ECommerce.API.Models;
 
-namespace ShopEase.Services.IServices
+namespace Vellora.ECommerce.API.Services.IServices
 {
     public interface IPermissionService
     {

@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using ShopEase.DTOs.Request;
-using ShopEase.DTOs.Response;
-using ShopEase.Models;
-using ShopEase.Repositories.IRepositories;
-using ShopEase.Services.IServices;
-using ShopEase.Utils;
+using Vellora.ECommerce.API.DTOs.Request;
+using Vellora.ECommerce.API.DTOs.Response;
+using Vellora.ECommerce.API.Models;
+using Vellora.ECommerce.API.Repositories.IRepositories;
+using Vellora.ECommerce.API.Services.IServices;
+using Vellora.ECommerce.API.Utils;
 
-namespace ShopEase.Services
+namespace Vellora.ECommerce.API.Services
 {
     public class AuthService : IAuthService
     {
@@ -67,7 +67,7 @@ namespace ShopEase.Services
             var encodedToken = Uri.EscapeDataString(token);
             var confirmUrl = $"https://localhost:7287/api/auth/confirm-email?userId={user.Id}&token={encodedToken}";
 
-            var subject = "Confirm Your ShopEase Account";
+            var subject = "Confirm Your Vellora.ECommerce.API Account";
             var body = $@"
                 <p>Hi {user.FirstName},</p>
                 <p>Thank you for registering. Please confirm your account by clicking the link below:</p>

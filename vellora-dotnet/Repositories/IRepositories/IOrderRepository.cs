@@ -1,7 +1,7 @@
-﻿using ShopEase.DTOs.Response;
-using ShopEase.Models;
+﻿using Vellora.ECommerce.API.DTOs.Response;
+using Vellora.ECommerce.API.Models;
 
-namespace ShopEase.Repositories.IRepositories
+namespace Vellora.ECommerce.API.Repositories.IRepositories
 {
     public interface IOrderRepository : IRepository<Order>
     {

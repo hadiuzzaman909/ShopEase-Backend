@@ -1,4 +1,4 @@
-﻿namespace ShopEase.Extensions
+﻿namespace Vellora.ECommerce.API.Extensions
 {
     public static class CorsServiceExtension
     {

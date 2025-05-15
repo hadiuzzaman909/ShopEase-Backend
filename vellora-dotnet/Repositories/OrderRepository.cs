@@ -1,11 +1,11 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
-using ShopEase.Data;
-using ShopEase.DTOs.Response;
-using ShopEase.Models;
-using ShopEase.Repositories.IRepositories;
+using Vellora.ECommerce.API.Data;
+using Vellora.ECommerce.API.DTOs.Response;
+using Vellora.ECommerce.API.Models;
+using Vellora.ECommerce.API.Repositories.IRepositories;
 
-namespace ShopEase.Repositories
+namespace Vellora.ECommerce.API.Repositories
 {
     public class OrderRepository : Repository<Order>, IOrderRepository
     {

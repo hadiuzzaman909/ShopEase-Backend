@@ -1,4 +1,4 @@
-﻿namespace ShopEase.Models
+﻿namespace Vellora.ECommerce.API.Models
 {
     public enum OrderStatus
     {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace ShopEase.Models
+namespace Vellora.ECommerce.API.Models
 {
     public class ApplicationUser : IdentityUser
     {

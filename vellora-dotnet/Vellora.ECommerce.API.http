@@ -1,0 +1,4 @@
+@vellora_dotnet_HostAddress = http://localhost:5127
+
+GET {{vellora_dotnet_HostAddress}}/api/products
+Accept: application/json

@@ -1,4 +1,4 @@
-﻿namespace ShopEase.DTOs.Request
+namespace Vellora.ECommerce.API.DTOs.Request
 {
     public class RegisterRequest
     {
@@ -10,5 +10,4 @@
         public DateTime? DateOfBirth { get; set; }
         public string Profession { get; set; }
     }
-
 }

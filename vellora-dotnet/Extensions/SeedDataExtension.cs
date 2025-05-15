@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using ShopEase.Data;
-using ShopEase.Models;
+using Vellora.ECommerce.API.Data;
+using Vellora.ECommerce.API.Models;
 
 public static class SeedDataExtension
 {
@@ -22,7 +22,7 @@ public static class SeedDataExtension
             if (!await roleManager.RoleExistsAsync(role))
             {
                 await roleManager.CreateAsync(new ApplicationRole { Name = role });
-                Console.WriteLine($"✅ Role {role} added successfully.");
+                Console.WriteLine($"Role {role} added successfully.");
             }
         }
 
@@ -43,7 +43,7 @@ public static class SeedDataExtension
                     Name = permission,
                     Description = $"{permission} permission"
                 });
-                Console.WriteLine($"✅ Permission {permission} added.");
+                Console.WriteLine($"Permission {permission} added.");
             }
         }
         await dbContext.SaveChangesAsync();
@@ -76,14 +76,14 @@ public static class SeedDataExtension
                         RoleId = roleEntity.Id,
                         PermissionId = permission.Id
                     });
-                    Console.WriteLine($"✅ Permission {permissionName} assigned to {roleName}.");
+                    Console.WriteLine($"Permission {permissionName} assigned to {roleName}.");
                 }
             }
         }
         await dbContext.SaveChangesAsync();
 
         // Step 4: Seed Default Admin User
-        string adminEmail = "admin@shopease.com";
+        string adminEmail = "admin@Vellora.ECommerce.API.com";
         string adminPassword = "Admin@123";
 
         var existingAdmin = await userManager.FindByEmailAsync(adminEmail);
@@ -94,7 +94,7 @@ public static class SeedDataExtension
                 UserName = adminEmail,
                 Email = adminEmail,
                 EmailConfirmed = true,
-                FirstName = "ShopEase",
+                FirstName = "Vellora.ECommerce.API",
                 Profession="Admin",
                 LastName = "Admin",
                 IsVerified = true
@@ -104,11 +104,11 @@ public static class SeedDataExtension
             if (createUserResult.Succeeded)
             {
                 await userManager.AddToRoleAsync(adminUser, "Admin");
-                Console.WriteLine($"✅ Admin user created and assigned role.");
+                Console.WriteLine($"Admin user created and assigned role.");
             }
             else
             {
-                Console.WriteLine($"❌ Failed to create admin user.");
+                Console.WriteLine($"Failed to create admin user.");
             }
         }
     }

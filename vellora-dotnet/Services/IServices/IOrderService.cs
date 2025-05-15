@@ -1,6 +1,6 @@
-﻿using ShopEase.DTOs.Request;
-using ShopEase.DTOs.Response;
-using ShopEase.Models;
+﻿using Vellora.ECommerce.API.DTOs.Request;
+using Vellora.ECommerce.API.DTOs.Response;
+using Vellora.ECommerce.API.Models;
 
 public interface IOrderService
 {

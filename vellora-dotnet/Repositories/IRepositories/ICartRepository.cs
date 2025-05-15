@@ -1,6 +1,6 @@
-﻿using ShopEase.Models;
+﻿using Vellora.ECommerce.API.Models;
 
-namespace ShopEase.Repositories.IRepositories
+namespace Vellora.ECommerce.API.Repositories.IRepositories
 {
     public interface ICartRepository : IRepository<Cart>
     {

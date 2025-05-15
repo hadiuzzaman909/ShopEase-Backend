@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-namespace ShopEase.Extensions
+namespace Vellora.ECommerce.API.Extensions
 {
     public static class JwtAuthExtension
     {

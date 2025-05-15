@@ -1,14 +1,14 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using ShopEase.Models;
-using ShopEase.Repositories.IRepositories;
-using ShopEase.Services.IServices;
+using Vellora.ECommerce.API.Models;
+using Vellora.ECommerce.API.Repositories.IRepositories;
+using Vellora.ECommerce.API.Services.IServices;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ShopEase.Services
+namespace Vellora.ECommerce.API.Services
 {
     public class PermissionService : IPermissionService
     {

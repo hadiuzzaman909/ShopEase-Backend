@@ -1,6 +1,5 @@
-﻿using ShopEase.Models;
-
-namespace ShopEase.DTOs.Request
+﻿using Vellora.ECommerce.API.Models;
+namespace Vellora.ECommerce.API.DTOs.Request
 {
     public class OrderStatusUpdateRequest
     {

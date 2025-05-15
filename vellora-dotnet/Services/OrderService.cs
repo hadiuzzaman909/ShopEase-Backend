@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
-using ShopEase.DTOs.Request;
-using ShopEase.DTOs.Response;
-using ShopEase.Models;
-using ShopEase.Repositories.IRepositories;
+using Vellora.ECommerce.API.DTOs.Request;
+using Vellora.ECommerce.API.DTOs.Response;
+using Vellora.ECommerce.API.Models;
+using Vellora.ECommerce.API.Repositories.IRepositories;
 
-namespace ShopEase.Services
+namespace Vellora.ECommerce.API.Services
 {
     public class OrderService : IOrderService
     {

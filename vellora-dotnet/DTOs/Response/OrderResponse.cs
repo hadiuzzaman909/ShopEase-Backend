@@ -1,6 +1,5 @@
-﻿using ShopEase.Models;
-
-namespace ShopEase.DTOs.Response
+﻿using Vellora.ECommerce.API.Models;
+namespace Vellora.ECommerce.API.DTOs.Response
 {
     public class OrderResponse
     {

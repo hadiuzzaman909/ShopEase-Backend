@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using ShopEase.DTOs.Request;
-using ShopEase.DTOs.Response;
-using ShopEase.Models;
+using Vellora.ECommerce.API.DTOs.Request;
+using Vellora.ECommerce.API.DTOs.Response;
+using Vellora.ECommerce.API.Models;
 
-namespace ShopEase.Profiles
+namespace Vellora.ECommerce.API.Profiles
 {
     public class MappingProfile : Profile
     {

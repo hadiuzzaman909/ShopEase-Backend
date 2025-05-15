@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using ShopEase.DTOs.Request;
-using ShopEase.DTOs.Response;
-using ShopEase.Services.IServices;
+using Vellora.ECommerce.API.DTOs.Request;
+using Vellora.ECommerce.API.DTOs.Response;
+using Vellora.ECommerce.API.Services.IServices;
 
-namespace ShopEase.Controllers
+namespace Vellora.ECommerce.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

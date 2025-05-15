@@ -1,11 +1,11 @@
-﻿using ShopEase.Repositories.IRepositories;
-using ShopEase.Services.IServices;
-using ShopEase.DTOs.Request;
-using ShopEase.DTOs.Response;
-using ShopEase.Models;
+﻿using Vellora.ECommerce.API.Repositories.IRepositories;
+using Vellora.ECommerce.API.Services.IServices;
+using Vellora.ECommerce.API.DTOs.Request;
+using Vellora.ECommerce.API.DTOs.Response;
+using Vellora.ECommerce.API.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace ShopEase.Services
+namespace Vellora.ECommerce.API.Services
 {
     public class CategoryService : ICategoryService
     {

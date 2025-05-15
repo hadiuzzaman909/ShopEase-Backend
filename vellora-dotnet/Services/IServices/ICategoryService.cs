@@ -1,8 +1,8 @@
-﻿using ShopEase.Models;
-using ShopEase.DTOs.Request;
-using ShopEase.DTOs.Response;
+﻿using Vellora.ECommerce.API.Models;
+using Vellora.ECommerce.API.DTOs.Request;
+using Vellora.ECommerce.API.DTOs.Response;
 
-namespace ShopEase.Services.IServices
+namespace Vellora.ECommerce.API.Services.IServices
 {
     public interface ICategoryService
     {

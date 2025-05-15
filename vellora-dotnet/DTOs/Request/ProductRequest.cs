@@ -1,4 +1,4 @@
-﻿namespace ShopEase.DTOs.Request
+﻿namespace Vellora.ECommerce.API.DTOs.Request
 {
  public class ProductRequest
     {

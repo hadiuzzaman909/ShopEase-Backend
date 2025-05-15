@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 
-namespace ShopEase.Extensions
+namespace Vellora.ECommerce.API.Extensions
 {
     public static class SwaggerExtension
     {
@@ -13,7 +13,7 @@ namespace ShopEase.Extensions
             {
                 options.SwaggerDoc("v1", new OpenApiInfo
                 {
-                    Title = "ShopEase API",
+                    Title = "Vellora.ECommerce.API",
                     Version = "v1",
                     Description = "E-commerce API with Authentication & Role-based Authorization"  
                 });
@@ -55,7 +55,7 @@ namespace ShopEase.Extensions
                 app.UseSwagger();
                 app.UseSwaggerUI(c =>
                 {
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "ShopEase API v1");
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Vellora.ECommerce.API v1");
                     c.RoutePrefix = "swagger";
                 });
             }

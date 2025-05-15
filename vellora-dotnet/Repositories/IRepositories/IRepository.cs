@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace ShopEase.Repositories.IRepositories
+namespace Vellora.ECommerce.API.Repositories.IRepositories
 {
     public interface IRepository<T> where T : class
     {
