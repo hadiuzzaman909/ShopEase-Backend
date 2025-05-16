@@ -1,0 +1,74 @@
+<header class="header">
+  <div class="container">
+    <!-- MOBILE & TABLET HEADER -->
+    <div class="mobile-header">
+      <div class="mobile-left">
+        <button aria-label="Toggle menu" class="icon-button menu-button" (click)="toggleDropdown()">
+          <span class="material-icons">menu</span>
+        </button>
+      </div>
+
+      <div class="logo mobile-logo">
+        <div class="logo-name">Vellora</div>
+        <div class="logo-tagline">Fashion & Lifestyle</div>
+      </div>
+
+      <div class="mobile-right">
+        <button aria-label="Search" class="icon-button">
+          <span class="material-icons">search</span>
+        </button>
+
+        <button aria-label="Cart" class="icon-button cart-button">
+          <span class="material-icons">shopping_cart</span>
+          <span class="cart-badge">3</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- DESKTOP HEADER -->
+    <div class="desktop-header">
+      <div class="logo desktop-logo">
+        <div class="logo-name">Vellora</div>
+        <div class="logo-tagline">Fashion & Lifestyle</div>
+      </div>
+
+      <nav class="categories">
+        <a href="#" class="category-link">Clothing</a>
+        <a href="#" class="category-link">Sunglasses</a>
+        <a href="#" class="category-link">Bags</a>
+        <a href="#" class="category-link">Accessories</a>
+        <a href="#" class="category-link">Watches</a>
+      </nav>
+
+      <div class="desktop-icons">
+        <button aria-label="Search" class="icon-button">
+          <span class="material-icons">search</span>
+        </button>
+
+        <button aria-label="Account" class="icon-button">
+          <span class="material-icons">account_circle</span>
+        </button>
+
+        <button aria-label="Wishlist" class="icon-button">
+          <span class="material-icons">favorite_border</span>
+        </button>
+
+        <button aria-label="Cart" class="icon-button cart-button">
+          <span class="material-icons">shopping_cart</span>
+          <span class="cart-badge">3</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MOBILE MENU -->
+  <nav class="mobile-menu" *ngIf="isDropdownOpen">
+    <a href="#" class="mobile-menu-link">Clothing</a>
+    <a href="#" class="mobile-menu-link">Sunglasses</a>
+    <a href="#" class="mobile-menu-link">Bags</a>
+    <a href="#" class="mobile-menu-link">Accessories</a>
+    <a href="#" class="mobile-menu-link">Watches</a>
+    <a href="#" class="mobile-menu-link">Account</a>
+    <a href="#" class="mobile-menu-link">Wishlist</a>
+  </nav>
+</header>
