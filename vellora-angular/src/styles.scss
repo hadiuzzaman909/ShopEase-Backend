@@ -13,7 +13,70 @@ html {
     typography: Roboto,
     density: 0,
   ));
-}/* You can add global styles to this file, and also import other style files */
+}
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+.owl-nav {
+  .owl-prev,
+  .owl-next {
+    display: none;
+    position: absolute !important;
+    top: 50% !important;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+     background-color: transparent !important;
+    cursor: pointer;
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    color: rgb(49, 49, 49) !important;
+    user-select: none;
+
+    &:hover {
+      background-color: rgba(219, 39, 119, 0.8);
+    }
+
+    &::before {
+      content: none !important;
+    }
+  }
+
+  // .owl-prev {
+  //   left: 10px !important;
+
+  //   &::after {
+  //     content: 'arrow_back_ios';
+  //     font-family: 'Material Icons';
+  //     font-size: 28px;
+  //     line-height: 1;
+  //   }
+  // }
+
+  // .owl-next {
+  //   right: 10px !important;
+
+  //   &::after {
+  //     content: 'arrow_forward_ios';
+  //     font-family: 'Material Icons';
+  //     font-size: 28px;
+  //     line-height: 1;
+  //   }
+  // }
+}
+
+.owl-dots {
+  position: absolute;
+  bottom: 40px; 
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  width: auto;
+  gap: 10px;
+}
