@@ -80,3 +80,10 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   width: auto;
   gap: 10px;
 }
+
+.owl-carousel-o {
+  .owl-item {
+    padding-left: 0;  // Remove 5px padding
+    padding-right: 0; // Remove 5px padding
+  }
+}

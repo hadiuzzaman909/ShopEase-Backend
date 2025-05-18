@@ -1,0 +1,19 @@
+<section class="categories-section">
+  <div class="categories-header">
+    <h2 class="categories-title">Explore Our Categories</h2>
+    <p class="categories-subtitle">
+      Discover the perfect style with our diverse range of fashion categories.
+    </p>
+  </div>
+
+  <owl-carousel-o [options]="customOptions" class="owl-theme">
+    <ng-container *ngFor="let category of categories">
+      <ng-template carouselSlide>
+        <div class="category-item" tabindex="0" role="group" [attr.aria-label]="category.name">
+          <img [src]="category.imageUrl" [alt]="category.name" />
+          <div class="category-name">{{ category.name }}</div>
+        </div>
+      </ng-template>
+    </ng-container>
+  </owl-carousel-o>
+</section>
