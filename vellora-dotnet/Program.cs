@@ -7,6 +7,7 @@ using Vellora.ECommerce.API.Utils;
 using Vellora.ECommerce.API.Repositories.IRepositories;
 using Vellora.ECommerce.API.Repositories;
 using Vellora.ECommerce.API.Profiles;
+using Vellora.ECommerce.API.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,14 +40,12 @@ builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<IOrderService, OrderService>(); // Register Order Service
 
-
 // Add Authorization Policies (Role-Based Access Control)
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
     options.AddPolicy("VendorOnly", policy => policy.RequireRole("Vendor"));
     options.AddPolicy("UserOnly", policy => policy.RequireRole("User"));
-
 });
 
 // Add Controllers
@@ -63,6 +62,9 @@ using (var scope = app.Services.CreateScope())
     var serviceProvider = scope.ServiceProvider;
     await SeedDataExtension.SeedRolesAndUsersAsync(serviceProvider);
 }
+
+//Middleware 
+app.UseMiddleware<ErrorHandlerMiddleware>();
 
 // Middleware Pipeline
 app.UseHttpsRedirection();

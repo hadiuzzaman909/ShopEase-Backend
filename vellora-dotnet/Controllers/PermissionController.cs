@@ -20,7 +20,7 @@ namespace Vellora.ECommerce.API.Controllers
             _permissionService = permissionService;
         }
 
-        // ✅ Get all permissions
+        //  Get all permissions
         [HttpGet]
         public async Task<IActionResult> GetPermissions()
         {
@@ -34,7 +34,7 @@ namespace Vellora.ECommerce.API.Controllers
             return Ok(response);
         }
 
-        // ✅ Add a new permission
+        // Add a new permission
         [HttpPost]
         public async Task<IActionResult> AddPermission([FromBody] PermissionRequest permissionRequest)
         {
@@ -64,7 +64,7 @@ namespace Vellora.ECommerce.API.Controllers
             }
         }
 
-        // ✅ Update an existing permission
+        // Update an existing permission
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdatePermission(int id, [FromBody] PermissionRequest permissionRequest)
         {
@@ -93,7 +93,7 @@ namespace Vellora.ECommerce.API.Controllers
             }
         }
 
-        // ✅ Delete a permission
+        // Delete a permission
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePermission(int id)
         {
