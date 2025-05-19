@@ -36,7 +36,7 @@ namespace Vellora.ECommerce.API.Data
                  .HasForeignKey(o => o.UserId)
                  .OnDelete(DeleteBehavior.Cascade); // Delete orders when user is deleted
 
-            // ✅ Role-Permissions many-to-many relationship
+            // Role-Permissions many-to-many relationship
             builder.Entity<RolePermission>()
                 .HasKey(rp => new { rp.RoleId, rp.PermissionId });
 
@@ -67,9 +67,9 @@ namespace Vellora.ECommerce.API.Data
             // Define Cart-User relationship (1 User → 1 Cart)
             builder.Entity<Cart>()
                 .HasOne(c => c.User)
-                .WithOne(u => u.Cart)  // 🔄 Establish bidirectional relationship
+                .WithOne(u => u.Cart)  // Establish bidirectional relationship
                 .HasForeignKey<Cart>(c => c.UserId)
-                .OnDelete(DeleteBehavior.Cascade);  // 🛑 If user is deleted, cart will be deleted too
+                .OnDelete(DeleteBehavior.Cascade);  //  If user is deleted, cart will be deleted too
 
             // Define CartItem-Cart relationship (1 Cart → Many Items)
             builder.Entity<CartItem>()
@@ -83,7 +83,7 @@ namespace Vellora.ECommerce.API.Data
                 .HasOne(ci => ci.Product)
                 .WithMany()
                 .HasForeignKey(ci => ci.ProductId)
-                .OnDelete(DeleteBehavior.Restrict); // 🛑 Prevent deletion of product if in cart
+                .OnDelete(DeleteBehavior.Restrict); // Prevent deletion of product if in cart
 
             // Order-OrderItems Relationship (1 Order → Many OrderItems)
             builder.Entity<Order>()

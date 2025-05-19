@@ -1,6 +1,6 @@
-import { CommonModule } from '@angular/common';
-import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { CarouselModule, OwlOptions } from 'ngx-owl-carousel-o';
+import { isPlatformBrowser, CommonModule } from '@angular/common';
+import {Component, ChangeDetectionStrategy} from '@angular/core';
+import { CarouselModule, OwlOptions} from 'ngx-owl-carousel-o';
 
 interface BannerSlide {
   bgImage: string;
@@ -19,7 +19,7 @@ interface BannerSlide {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BannerComponent {
-  slides: BannerSlide[] = [
+  slides: BannerSlide[] = [     
     {
       bgImage: 'assets/banner/background-1.png',
       personImage: 'assets/banner/men-1.png',
@@ -40,97 +40,34 @@ export class BannerComponent {
       personImageAlt: 'Man in a casual yet fashionable outfit looking thoughtful',
       title: 'Unmatched Quality',
       description: 'Craftsmanship meets style. Dress to impress with Vellora.',
-    },
+    }, 
   ];
 
-  currentIndex = 0;
-  autoSlideInterval?: number;
-  autoSlideDelay = 3000; // 3 seconds
-
-  customOptions: OwlOptions = {
-    loop: true, // Loop through the slides
-    mouseDrag: true,    // Enable mouse drag (desktop)
-    touchDrag: true,    // Enable touch drag (mobile/tablet)
-    pullDrag: true,     // Enable pull drag effect
-    dots: true, // Enable dots
+    customOptions: OwlOptions = {
+    loop: true,
+    mouseDrag: true,   
+    touchDrag: true,    
+    pullDrag: true,     
+    dots: true, 
     navSpeed: 700,
     navText: ['', ''],
     responsive: {
       0: {
-        items: 1, // Show 1 slide on mobile
+        items: 1, 
       },
       400: {
-        items: 1, // Show 1 slide on small screens
+        items: 1, 
       },
       740: {
-        items: 1, // Show 1 slide on tablets
+        items: 1, 
       },
       940: {
-        items: 1, // Show 1 slide on larger screens
+        items: 1, 
       },
     },
     nav: true,
-    autoplay: true, // Enable auto play
-    autoplayTimeout: this.autoSlideDelay, // Set auto slide delay to 3 seconds
+    autoplay: true, 
     autoplayHoverPause: false
-  };
 
-  // Start auto slide when component is initialized
-  ngOnInit() {
-    if (this.slides.length > 1) {
-      this.startAutoSlide();
-    }
-  }
-
-  ngOnDestroy() {
-    this.stopAutoSlide();
-  }
-
-  // Slide change logic
-  onNextClick(): void {
-    this.next();
-    this.restartAutoSlide();
-  }
-
-  onPrevClick(): void {
-    this.prev();
-    this.restartAutoSlide();
-  }
-
-  next(): void {
-    this.currentIndex = (this.currentIndex + 1) % this.slides.length;
-  }
-
-  prev(): void {
-    this.currentIndex =
-      (this.currentIndex - 1 + this.slides.length) % this.slides.length;
-  }
-
-  selectSlide(index: number): void {
-    if (index >= 0 && index < this.slides.length) {
-      this.currentIndex = index;
-      this.restartAutoSlide();
-    }
-  }
-
-  startAutoSlide(): void {
-    this.stopAutoSlide();
-    this.autoSlideInterval = window.setInterval(() => {
-      this.next();
-    }, this.autoSlideDelay);
-  }
-
-  stopAutoSlide(): void {
-    if (this.autoSlideInterval) {
-      clearInterval(this.autoSlideInterval);
-      this.autoSlideInterval = undefined;
-    }
-  }
-
-  restartAutoSlide(): void {
-    if (this.slides.length > 1) {
-      this.stopAutoSlide();
-      this.startAutoSlide();
-    }
   }
 }

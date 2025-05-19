@@ -2,19 +2,18 @@
 using Vellora.ECommerce.API.Data;
 using Vellora.ECommerce.API.Models;
 
-
 namespace Vellora.ECommerce.API.Extensions
 {
     public static class IdentityExtension
     {
         public static IServiceCollection ConfigureIdentity(this IServiceCollection services, ConfigurationManager configuration)
         {
-            // ✅ Register Identity with `ApplicationRole`
+            // Register Identity with `ApplicationRole`
             services.AddIdentity<ApplicationUser, ApplicationRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
-            // ✅ Configure Identity Options
+            // Configure Identity Options
             services.Configure<IdentityOptions>(options =>
             {
                 options.Password.RequiredLength = 8;

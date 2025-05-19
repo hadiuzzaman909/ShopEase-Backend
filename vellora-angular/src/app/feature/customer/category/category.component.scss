@@ -9,7 +9,7 @@
 }
 
 .categories-title {
-  font-size: 2.25rem;
+  font-size: 2rem;
   font-weight: 700;
   color: #db2777;
   margin: 0;
@@ -31,7 +31,7 @@
   align-items: center;
   cursor: pointer;
   text-align: center;
-  padding: 20px 0px; /* remove padding to reduce width */
+  padding: 20px 0px; 
   transition: transform 0.3s ease;
 
   &:hover,
@@ -41,7 +41,7 @@
   }
 
   img {
-    width: 150px;  /* smaller size to fit 5 items well */
+    width: 150px;  
     height: 150px;
     border-radius: 50%;
     object-fit: cover;
@@ -73,7 +73,7 @@
 
   .owl-item {
     box-sizing: border-box;
-    padding-left: 5px;  /* 10px gap split on each side */
+    padding-left: 5px;  
     padding-right: 5px;
   }
 }
