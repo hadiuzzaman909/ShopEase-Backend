@@ -83,7 +83,7 @@ public static class SeedDataExtension
         await dbContext.SaveChangesAsync();
 
         // Step 4: Seed Default Admin User
-        string adminEmail = "admin@Vellora.ECommerce.API.com";
+        string adminEmail = "admin@vellora.com";
         string adminPassword = "Admin@123";
 
         var existingAdmin = await userManager.FindByEmailAsync(adminEmail);
@@ -94,7 +94,7 @@ public static class SeedDataExtension
                 UserName = adminEmail,
                 Email = adminEmail,
                 EmailConfirmed = true,
-                FirstName = "Vellora.ECommerce.API",
+                FirstName = "Vellora",
                 Profession="Admin",
                 LastName = "Admin",
                 IsVerified = true

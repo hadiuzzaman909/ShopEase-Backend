@@ -22,6 +22,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 // Register Identity Using Extension
 builder.Services.ConfigureIdentity(builder.Configuration);
 
+builder.Services.AddHttpContextAccessor();  // Add this to register IHttpContextAccessor
+
 // Register Authentication, CORS, and Utilities
 builder.Services.ConfigureJwtAuth(builder.Configuration);
 builder.Services.AddCorsPolicies(builder.Configuration);

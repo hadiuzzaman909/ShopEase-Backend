@@ -25,7 +25,13 @@ namespace Vellora.ECommerce.API.Controllers
         [HttpGet("confirm-email")]
         public async Task<IActionResult> ConfirmEmail(string userId, string token)
         {
-            var (Succeeded, Message) = await _authService.ConfirmEmailAsync(userId, token);
+            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(token))
+                return BadRequest("UserId and token are required");
+
+            // Decode the token before passing it
+            string decodedToken = Uri.UnescapeDataString(token);
+
+            var (Succeeded, Message) = await _authService.ConfirmEmailAsync(userId, decodedToken);
             if (!Succeeded) return BadRequest(Message);
             return Ok(Message);
         }
@@ -45,6 +51,34 @@ namespace Vellora.ECommerce.API.Controllers
             if (!Succeeded) return Unauthorized(Result);
             return Ok(Result);
         }
+
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
+        {
+            var (Succeeded, Message) = await _authService.SendPasswordResetOtpAsync(request.Email);
+            if (!Succeeded) return BadRequest(Message);
+
+            return Ok(Message);
+        }
+
+        [HttpPost("verify-otp")]
+        public async Task<IActionResult> VerifyOtp([FromBody] VerifyOtpRequest request)
+        {
+            var (Succeeded, Message) = await _authService.VerifyPasswordResetOtpAsync(request.Email, request.Otp);
+            if (!Succeeded) return BadRequest(Message);
+
+            return Ok(Message);
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
+        {
+            var (Succeeded, Message) = await _authService.ResetPasswordAsync(request);
+            if (!Succeeded) return BadRequest(Message);
+
+            return Ok(Message);
+        }
+
 
         [HttpPost("logout")]
         public async Task<IActionResult> Logout(LogoutRequest request)

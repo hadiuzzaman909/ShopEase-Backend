@@ -15,6 +15,8 @@ namespace Vellora.ECommerce.API.Repositories
 
         public ICartRepository Cart { get; private set; }
         public IOrderRepository Order { get; private set; }
+        
+        public IPasswordResetTokenRepository PasswordResetTokens { get; private set; }
 
         public UnitOfWork(ApplicationDbContext db)
         {
@@ -24,8 +26,9 @@ namespace Vellora.ECommerce.API.Repositories
             Permissions = new PermissionRepository(_db);
             Category = new CategoryRepository(_db);
             Product = new ProductRepository(_db);
-            Cart= new CartRepository(_db);
+            Cart = new CartRepository(_db);
             Order = new OrderRepository(_db);
+            PasswordResetTokens = new PasswordResetTokenRepository(_db);
         }
 
         public async Task SaveAsync()
