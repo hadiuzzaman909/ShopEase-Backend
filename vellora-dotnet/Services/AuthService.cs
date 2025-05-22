@@ -43,15 +43,14 @@ namespace Vellora.ECommerce.API.Services
         // 1) REGISTER
         public async Task<(bool Succeeded, RegisterResponse Result)> RegisterAsync(RegisterRequest request)
         {
-            // Step 1: Check if the role is valid before creating the user
-            var role = string.IsNullOrWhiteSpace(request.Role) ? "Customer" : request.Role;
+            var defaultRole = "Customer";
 
-            if (!await _roleManager.RoleExistsAsync(role))
+            // Check if default role exists, create if not
+            if (!await _roleManager.RoleExistsAsync(defaultRole))
             {
-                return (false, new RegisterResponse { Message = $"Role '{role}' does not exist." });
+                await _roleManager.CreateAsync(new ApplicationRole { Name = defaultRole });
             }
 
-            // Step 2: Create the user only after validating the role
             var user = new ApplicationUser
             {
                 UserName = request.Email,
@@ -67,13 +66,14 @@ namespace Vellora.ECommerce.API.Services
             var createResult = await _userManager.CreateAsync(user, request.Password);
             if (!createResult.Succeeded)
             {
-                return (false, new RegisterResponse { Message = "User registration failed." });
+                var errors = string.Join("; ", createResult.Errors.Select(e => e.Description));
+                return (false, new RegisterResponse { Message = $"User registration failed: {errors}" });
             }
 
-            // Step 3: Add the user to the validated role
-            await _userManager.AddToRoleAsync(user, role);
+            // Assign default role
+            await _userManager.AddToRoleAsync(user, defaultRole);
 
-            // Step 4: Generate email confirmation token and send email
+            // Generate email confirmation token
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             var encodedToken = Uri.EscapeDataString(token);
 
@@ -84,13 +84,13 @@ namespace Vellora.ECommerce.API.Services
             // Generate the confirmation URL based on the current scheme
             var confirmUrl = $"{protocol}://localhost:5001/api/auth/confirm-email?userId={user.Id}&token={encodedToken}";
 
-            var subject = "Confirm Your Vellora.ECommerce.API Account";
+            var subject = "Confirm Your Account";
             var body = $@"
-            <p>Hi {user.FirstName},</p>
-            <p>Thank you for registering. Please confirm your account by clicking the link below:</p>
-            <p><a href='{confirmUrl}'>Confirm Email</a></p>
-            ";
+                <p>Hi {user.FirstName},</p>
+                <p>Thank you for registering. Please confirm your account by clicking the link below:</p>
+                <p><a href='{confirmUrl}'>Confirm Email</a></p>";
 
+            // Send confirmation email
             await _emailService.SendEmailAsync(user.Email, subject, body);
 
             return (true, new RegisterResponse
@@ -100,18 +100,18 @@ namespace Vellora.ECommerce.API.Services
             });
         }
 
-        // 2) CONFIRM EMAIL
         public async Task<(bool Succeeded, string Message)> ConfirmEmailAsync(string userId, string token)
         {
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
                 return (false, "Invalid user ID.");
 
-            Console.WriteLine($"ConfirmEmailAsync called with token length: {token?.Length}");
-
             var result = await _userManager.ConfirmEmailAsync(user, token);
             if (!result.Succeeded)
-                return (false, $"Email confirmation failed: {string.Join(", ", result.Errors.Select(e => e.Description))}");
+            {
+                var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+                return (false, $"Email confirmation failed: {errors}");
+            }
 
             user.IsVerified = true;
             await _userManager.UpdateAsync(user);
@@ -119,22 +119,22 @@ namespace Vellora.ECommerce.API.Services
             return (true, "Email confirmed successfully. You can now log in.");
         }
 
-        // 2) LOGIN
         public async Task<(bool Succeeded, LoginResponse Result)> LoginAsync(LoginRequest request)
         {
             var user = await _userManager.FindByEmailAsync(request.Email);
             if (user == null)
                 return (false, new LoginResponse { Message = "Invalid credentials" });
 
-            bool passValid = await _userManager.CheckPasswordAsync(user, request.Password);
-            if (!passValid)
+            bool passwordValid = await _userManager.CheckPasswordAsync(user, request.Password);
+            if (!passwordValid)
                 return (false, new LoginResponse { Message = "Invalid credentials" });
 
-
             var roles = await _userManager.GetRolesAsync(user);
-            var accessToken = _jwtUtils.GenerateJwtToken(user, roles, 1);
-            var refreshToken = _jwtUtils.GenerateJwtToken(user, roles, 168);
 
+            var accessToken = _jwtUtils.GenerateJwtToken(user, roles, expiryHours: 1); // 1 hour expiry
+            var refreshToken = _jwtUtils.GenerateJwtToken(user, roles, expiryHours: 168); // 7 days expiry
+
+            // Save refresh token in DB
             var refreshTokenEntry = new RefreshToken
             {
                 Token = refreshToken,
@@ -146,8 +146,7 @@ namespace Vellora.ECommerce.API.Services
             await _unitOfWork.RefreshToken.AddAsync(refreshTokenEntry);
             await _unitOfWork.SaveAsync();
 
-
-            var loginResponse = new LoginResponse
+            var response = new LoginResponse
             {
                 Message = "Login successful",
                 AccessToken = accessToken,
@@ -155,34 +154,45 @@ namespace Vellora.ECommerce.API.Services
                 IsVerified = user.IsVerified
             };
 
-            return (true, loginResponse);
+            return (true, response);
         }
 
-        // 4) REFRESH TOKEN
         public async Task<(bool Succeeded, object Result)> RefreshTokenAsync(string refreshTokenValue)
         {
-            var existing = await _unitOfWork.RefreshToken.GetByTokenAsync(refreshTokenValue);
-            if (existing == null || existing.IsRevoked || existing.ExpiryDate < DateTime.UtcNow)
+            var existingToken = await _unitOfWork.RefreshToken.GetAsync(rt => rt.Token == refreshTokenValue && !rt.IsRevoked);
+            if (existingToken == null || existingToken.ExpiryDate < DateTime.UtcNow)
                 return (false, "Invalid or expired refresh token.");
 
-            var user = await _userManager.FindByIdAsync(existing.UserId);
+            var user = await _userManager.FindByIdAsync(existingToken.UserId);
             if (user == null)
                 return (false, "User not found.");
 
             var roles = await _userManager.GetRolesAsync(user);
-            var newAccessToken = _jwtUtils.GenerateJwtToken(user, roles, 1);
+            var newAccessToken = _jwtUtils.GenerateJwtToken(user, roles, expiryHours: 1);
 
             var resultObj = new
             {
                 Message = "Token refreshed",
                 AccessToken = newAccessToken,
-                RefreshToken = existing.Token,
+                RefreshToken = existingToken.Token,
                 user.IsVerified
             };
 
             return (true, resultObj);
         }
 
+        public async Task<(bool Succeeded, string Message)> LogoutAsync(string refreshTokenValue)
+        {
+            var existingToken = await _unitOfWork.RefreshToken.GetAsync(r => r.Token == refreshTokenValue && !r.IsRevoked);
+            if (existingToken == null)
+                return (false, "Refresh token not found or already revoked.");
+
+            existingToken.IsRevoked = true;
+            _unitOfWork.RefreshToken.Update(existingToken);
+            await _unitOfWork.SaveAsync();
+
+            return (true, "Logout successful. Refresh token revoked.");
+        }
 
         public async Task<(bool Succeeded, string Message)> SendPasswordResetOtpAsync(string email)
         {
@@ -193,7 +203,7 @@ namespace Vellora.ECommerce.API.Services
             // Generate 6-digit OTP
             var otp = GenerateOtp();
 
-            // Create OTP record
+            // Create OTP record (assuming PasswordResetToken entity and repository exist)
             var otpRecord = new PasswordResetToken
             {
                 UserId = user.Id,
@@ -205,8 +215,8 @@ namespace Vellora.ECommerce.API.Services
             await _unitOfWork.PasswordResetTokens.AddAsync(otpRecord);
             await _unitOfWork.SaveAsync();
 
-            // Send OTP email
-            var subject = "Your Vellora Password Reset OTP";
+            // Send OTP via email
+            var subject = "Your Password Reset OTP";
             var body = $"Your OTP code is: {otp}. It expires in 15 minutes.";
 
             await _emailService.SendEmailAsync(email, subject, body);
@@ -221,17 +231,11 @@ namespace Vellora.ECommerce.API.Services
                 return (false, "Email not registered.");
 
             var otpRecord = await _unitOfWork.PasswordResetTokens.GetByUserIdAndOtpAsync(user.Id, otp);
-            if (otpRecord == null)
+            if (otpRecord == null || otpRecord.IsUsed || otpRecord.ExpiryDate < DateTime.UtcNow)
                 return (false, "Invalid or expired OTP.");
-
-            // Optionally mark OTP as used here, or do it in reset password API
-            // otpRecord.IsUsed = true;
-            // _unitOfWork.PasswordResetTokens.Update(otpRecord);
-            // await _unitOfWork.SaveAsync();
 
             return (true, "OTP verification successful.");
         }
-
 
         public async Task<(bool Succeeded, string Message)> ResetPasswordAsync(ResetPasswordRequest request)
         {
@@ -242,12 +246,10 @@ namespace Vellora.ECommerce.API.Services
             if (user == null)
                 return (false, "Email not registered.");
 
-            // Validate OTP
             var otpRecord = await _unitOfWork.PasswordResetTokens.GetByUserIdAndOtpAsync(user.Id, request.Otp);
-            if (otpRecord == null)
+            if (otpRecord == null || otpRecord.IsUsed || otpRecord.ExpiryDate < DateTime.UtcNow)
                 return (false, "Invalid or expired OTP.");
 
-            // Reset the password using UserManager
             var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
             var resetResult = await _userManager.ResetPasswordAsync(user, resetToken, request.NewPassword);
 
@@ -265,21 +267,7 @@ namespace Vellora.ECommerce.API.Services
             return (true, "Password has been reset successfully.");
         }
 
-
-        // 5) LOGOUT
-        public async Task<(bool Succeeded, string Message)> LogoutAsync(string refreshTokenValue)
-        {
-            var existing = await _unitOfWork.RefreshToken.GetAsync(r => r.Token == refreshTokenValue && !r.IsRevoked);
-            if (existing == null)
-                return (false, "Refresh token not found.");
-
-            existing.IsRevoked = true;
-            _unitOfWork.RefreshToken.Update(existing);
-            await _unitOfWork.SaveAsync();
-
-            return (true, "Logged out (Refresh token revoked).");
-        }
-
+        // Helper method to generate OTP
         private string GenerateOtp()
         {
             using var rng = RandomNumberGenerator.Create();
@@ -288,5 +276,6 @@ namespace Vellora.ECommerce.API.Services
             var randomNumber = BitConverter.ToUInt32(bytes, 0) % 1000000;
             return randomNumber.ToString("D6");
         }
+
     }
 }

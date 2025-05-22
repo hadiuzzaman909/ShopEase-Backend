@@ -1,19 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace Vellora.ECommerce.API.Models
+﻿namespace Vellora.ECommerce.API.Models
 {
-    public class RolePermission
+ public class RolePermission
     {
-        // Composite Key
-        [Required]
+        // Foreign key to ApplicationRole
         public string RoleId { get; set; }
-        [ForeignKey("RoleId")]
-        public ApplicationRole Role { get; set; }
+        public virtual ApplicationRole Role { get; set; }
 
-        [Required]
+        // Foreign key to Permission
         public int PermissionId { get; set; }
-        [ForeignKey("PermissionId")]
-        public Permission Permission { get; set; }
+        public virtual Permission Permission { get; set; }
     }
 }

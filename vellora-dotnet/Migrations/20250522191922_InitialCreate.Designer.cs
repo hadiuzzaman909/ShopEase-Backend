@@ -12,8 +12,8 @@ using Vellora.ECommerce.API.Data;
 namespace Vellora.ECommerce.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250520122649_AddPasswordResetToken")]
-    partial class AddPasswordResetToken
+    [Migration("20250522191922_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,6 +33,9 @@ namespace Vellora.ECommerce.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("ApplicationRoleId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("ClaimType")
                         .HasColumnType("nvarchar(max)");
 
@@ -44,6 +47,8 @@ namespace Vellora.ECommerce.API.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ApplicationRoleId");
 
                     b.HasIndex("RoleId");
 
@@ -58,6 +63,9 @@ namespace Vellora.ECommerce.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("ClaimType")
                         .HasColumnType("nvarchar(max)");
 
@@ -69,6 +77,8 @@ namespace Vellora.ECommerce.API.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("UserId");
 
@@ -83,6 +93,9 @@ namespace Vellora.ECommerce.API.Migrations
                     b.Property<string>("ProviderKey")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
 
@@ -91,6 +104,8 @@ namespace Vellora.ECommerce.API.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("LoginProvider", "ProviderKey");
+
+                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("UserId");
 
@@ -387,33 +402,6 @@ namespace Vellora.ECommerce.API.Migrations
                     b.ToTable("OrderItems");
                 });
 
-            modelBuilder.Entity("Vellora.ECommerce.API.Models.PasswordResetToken", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("ExpiryDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsUsed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Otp")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("PasswordResetTokens");
-                });
-
             modelBuilder.Entity("Vellora.ECommerce.API.Models.Permission", b =>
                 {
                     b.Property<int>("Id")
@@ -502,35 +490,6 @@ namespace Vellora.ECommerce.API.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("Vellora.ECommerce.API.Models.RefreshToken", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("ExpiryDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsRevoked")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Token")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("RefreshTokens");
-                });
-
             modelBuilder.Entity("Vellora.ECommerce.API.Models.RolePermission", b =>
                 {
                     b.Property<string>("RoleId")
@@ -549,6 +508,10 @@ namespace Vellora.ECommerce.API.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Vellora.ECommerce.API.Models.ApplicationRole", null)
+                        .WithMany("RoleClaims")
+                        .HasForeignKey("ApplicationRoleId");
+
+                    b.HasOne("Vellora.ECommerce.API.Models.ApplicationRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -558,6 +521,10 @@ namespace Vellora.ECommerce.API.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
                     b.HasOne("Vellora.ECommerce.API.Models.ApplicationUser", null)
+                        .WithMany("UserClaims")
+                        .HasForeignKey("ApplicationUserId");
+
+                    b.HasOne("Vellora.ECommerce.API.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -566,6 +533,10 @@ namespace Vellora.ECommerce.API.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
+                    b.HasOne("Vellora.ECommerce.API.Models.ApplicationUser", null)
+                        .WithMany("UserLogins")
+                        .HasForeignKey("ApplicationUserId");
+
                     b.HasOne("Vellora.ECommerce.API.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
@@ -682,17 +653,6 @@ namespace Vellora.ECommerce.API.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("Vellora.ECommerce.API.Models.RefreshToken", b =>
-                {
-                    b.HasOne("Vellora.ECommerce.API.Models.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Vellora.ECommerce.API.Models.RolePermission", b =>
                 {
                     b.HasOne("Vellora.ECommerce.API.Models.Permission", "Permission")
@@ -714,6 +674,8 @@ namespace Vellora.ECommerce.API.Migrations
 
             modelBuilder.Entity("Vellora.ECommerce.API.Models.ApplicationRole", b =>
                 {
+                    b.Navigation("RoleClaims");
+
                     b.Navigation("RolePermissions");
                 });
 
@@ -723,6 +685,10 @@ namespace Vellora.ECommerce.API.Migrations
                         .IsRequired();
 
                     b.Navigation("Orders");
+
+                    b.Navigation("UserClaims");
+
+                    b.Navigation("UserLogins");
 
                     b.Navigation("UserRoles");
                 });

@@ -1,106 +1,68 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Vellora.ECommerce.API.DTOs.Request;
-using Vellora.ECommerce.API.DTOs.Response;
-using Microsoft.AspNetCore.Authorization;
 using Vellora.ECommerce.API.Services.IServices;
-using Vellora.ECommerce.API.Models;
-
 
 namespace Vellora.ECommerce.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Admin")]
-    public class PermissionController : ControllerBase
+    [Authorize(Roles = "Admin")]  // Only Admins can manage permissions
+    public class PermissionsController : ControllerBase
     {
         private readonly IPermissionService _permissionService;
 
-        public PermissionController(IPermissionService permissionService)
+        public PermissionsController(IPermissionService permissionService)
         {
             _permissionService = permissionService;
         }
 
-        //  Get all permissions
         [HttpGet]
-        public async Task<IActionResult> GetPermissions()
+        public async Task<IActionResult> GetAllPermissions()
         {
-            var permissions = await _permissionService.GetPermissionsAsync();
-            var response = permissions.Select(p => new PermissionResponse
-            {
-                Id = p.Id,
-                Name = p.Name,
-                Description = p.Description
-            });
-            return Ok(response);
+            var permissions = await _permissionService.GetAllPermissionsAsync();
+            return Ok(permissions);
         }
 
-        // Add a new permission
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetPermissionById(int id)
+        {
+            var permission = await _permissionService.GetPermissionByIdAsync(id);
+            if (permission == null) return NotFound();
+
+            return Ok(permission);
+        }
+
         [HttpPost]
-        public async Task<IActionResult> AddPermission([FromBody] PermissionRequest permissionRequest)
+        public async Task<IActionResult> CreatePermission([FromBody] PermissionRequest request)
         {
             try
             {
-                // Mapping PermissionRequest to Permission
-                var permission = new Permission
-                {
-                    Name = permissionRequest.Name,
-                    Description = permissionRequest.Description
-                };
-
-                var newPermission = await _permissionService.AddPermissionAsync(permission);
-
-                var response = new PermissionResponse
-                {
-                    Id = newPermission.Id,
-                    Name = newPermission.Name,
-                    Description = newPermission.Description
-                };
-
-                return Ok(response);
+                var permission = await _permissionService.CreatePermissionAsync(request);
+                return CreatedAtAction(nameof(GetPermissionById), new { id = permission.Id }, permission);
             }
-            catch (InvalidOperationException ex)
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
 
-        // Update an existing permission
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdatePermission(int id, [FromBody] PermissionRequest permissionRequest)
+        public async Task<IActionResult> UpdatePermission(int id, [FromBody] PermissionRequest request)
         {
-            try
-            {
-                var updatedPermission = new Permission
-                {
-                    Name = permissionRequest.Name,
-                    Description = permissionRequest.Description
-                };
+            var success = await _permissionService.UpdatePermissionAsync(id, request);
+            if (!success) return NotFound();
 
-                var permission = await _permissionService.UpdatePermissionAsync(id, updatedPermission);
-
-                var response = new PermissionResponse
-                {
-                    Id = permission.Id,
-                    Name = permission.Name,
-                    Description = permission.Description
-                };
-
-                return Ok(response);
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
+            return NoContent();
         }
 
-        // Delete a permission
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePermission(int id)
         {
-            bool deleted = await _permissionService.DeletePermissionAsync(id);
-            if (!deleted) return NotFound("Permission not found.");
+            var success = await _permissionService.DeletePermissionAsync(id);
+            if (!success) return NotFound();
 
-            return Ok("Permission deleted.");
+            return NoContent();
         }
     }
 }

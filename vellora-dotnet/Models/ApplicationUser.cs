@@ -8,15 +8,21 @@ namespace Vellora.ECommerce.API.Models
         public string LastName { get; set; }
         public DateTime? DateOfBirth { get; set; }
         public string Profession { get; set; }
-        public bool IsVerified { get; set; } = false;
+        public bool IsVerified { get; set; } = true;
 
-        // Establish 1-to-1 relationship with Cart (Each user has ONE cart)
+        // 1-to-1 relationship with Cart (Each user has ONE cart)
         public virtual Cart Cart { get; set; }
 
-        // Establish 1-to-Many relationship with Orders (Each user can place multiple orders)
+        // 1-to-many relationship with Orders (Each user can have multiple orders)
         public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 
-        // Define Many-to-Many relationship for Roles
+        // Many-to-many relationship with Roles
         public virtual ICollection<IdentityUserRole<string>> UserRoles { get; set; } = new List<IdentityUserRole<string>>();
+
+        // Many-to-many relationship with Claims
+        public virtual ICollection<IdentityUserClaim<string>> UserClaims { get; set; } = new List<IdentityUserClaim<string>>();
+        
+        // Many-to-many relationship with Logins (for external login)
+        public virtual ICollection<IdentityUserLogin<string>> UserLogins { get; set; } = new List<IdentityUserLogin<string>>();
     }
 }
