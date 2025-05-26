@@ -9,8 +9,10 @@ using Vellora.ECommerce.API.Repositories;
 using Vellora.ECommerce.API.Profiles;
 using Vellora.ECommerce.API.Middleware;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
+var config = builder.Configuration;
 
 // Register DbContext
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -40,11 +42,19 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICartService, CartService>();
-builder.Services.AddScoped<IOrderService, OrderService>(); // Register Order Service
-
+builder.Services.AddScoped<IOrderService, OrderService>();
 
 builder.Services.AddScoped<IUserPermissionService, UserPermissionService>();
 builder.Services.AddScoped<IAuthorizationHandler, PermissionHandler>();
+
+
+builder.Services.AddAuthentication()
+    .AddGoogle(googleOptions =>
+    {
+        googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+        googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+    });
+
 
 // Add Authorization Policies (Role-Based Access Control)
 builder.Services.AddAuthorization(options =>
@@ -54,10 +64,10 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("UserOnly", policy => policy.RequireRole("User"));
 
     // Permission-based policies
+    //Need to implement API (CRUD)
     options.AddPolicy("Permission.ViewUsers", policy =>
         policy.Requirements.Add(new PermissionRequirement("ViewUsers")));
 });
-
 
 // Add Controllers
 builder.Services.AddControllers();

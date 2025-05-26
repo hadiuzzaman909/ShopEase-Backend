@@ -10,9 +10,10 @@
             {
                 options.AddPolicy("AllowSpecificOrigins", policy =>
                 {
-                    policy.WithOrigins(allowedOrigins) // Use specific allowed origins from config
+                    policy.WithOrigins(allowedOrigins)
                           .AllowAnyHeader()
-                          .AllowAnyMethod();
+                          .AllowAnyMethod()
+                          .AllowCredentials(); // If you use credentials like cookies or auth headers
                 });
 
                 options.AddPolicy("AllowAll", policy =>
@@ -28,9 +29,9 @@
 
         public static WebApplication UseCorsPolicies(this WebApplication app)
         {
-            app.UseCors("AllowAll"); // You can change this to "AllowSpecificOrigins"
+            // Apply the specific origins policy here instead of AllowAll
+            app.UseCors("AllowSpecificOrigins");
             return app;
         }
     }
-
 }

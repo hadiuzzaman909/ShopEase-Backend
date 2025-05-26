@@ -20,6 +20,7 @@ namespace Vellora.ECommerce.API.Services.IServices
 
               Task<(bool Succeeded, string Message)> ResetPasswordAsync(ResetPasswordRequest request);
 
-       }
+              Task<(bool Succeeded, object Result)> ExternalLoginAsync(string email, string name);
 
+       }
 }

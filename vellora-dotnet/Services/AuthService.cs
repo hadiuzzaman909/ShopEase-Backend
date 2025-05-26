@@ -277,5 +277,45 @@ namespace Vellora.ECommerce.API.Services
             return randomNumber.ToString("D6");
         }
 
+        public async Task<(bool Succeeded, object Result)> ExternalLoginAsync(string email, string name)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+
+            if (user == null)
+            {
+                user = new ApplicationUser
+                {
+                    Email = email,
+                    UserName = email,
+                    FirstName = name, // Optionally parse first/last names separately
+                    EmailConfirmed = true, // External login means email is verified
+                    IsVerified = true
+                };
+
+                var createResult = await _userManager.CreateAsync(user);
+                if (!createResult.Succeeded)
+                {
+                    var errors = string.Join(", ", createResult.Errors.Select(e => e.Description));
+                    return (false, $"Failed to create user: {errors}");
+                }
+
+                // Add default role
+                await _userManager.AddToRoleAsync(user, "Customer");
+            }
+
+            var roles = await _userManager.GetRolesAsync(user);
+            var accessToken = _jwtUtils.GenerateJwtToken(user, roles, 1);
+            var refreshToken = _jwtUtils.GenerateJwtToken(user, roles, 168);
+
+            return (true, new
+            {
+                Message = "Login successful",
+                AccessToken = accessToken,
+                RefreshToken = refreshToken,
+                IsVerified = user.IsVerified
+            });
+        }
+
+
     }
 }
